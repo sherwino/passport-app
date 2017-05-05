@@ -22,6 +22,7 @@ authRoutes.post('/signup', (req, res, next) => {
     return;
   }
 
+//IF YOU WANT TO CHECK PASSWORD LENGTH, CHARACTERS, ETC YOU WOULD DO IT HERE
   User.findone(
     //first argument is the criteria which documents you want
     { username: signUsername },
@@ -41,6 +42,27 @@ authRoutes.post('/signup', (req, res, next) => {
         });
         return;
       }
+    //once you get to this point you should be able to save the user
+
+    //encrypt the password that the user submitted
+      const salt = bcrypt.genSaltSync(10);
+      const hashPass = bcrypt.hashSync(signPassword, salt);
+
+    //create the user
+      const theUser = new User({
+        name:               signName,
+        username:           signUsername,
+        encryptedPassword:  hashPass
+
+      });
+      //save the use to the db, unless if there is an error
+      theUser.save((err) => {
+        if (err) {
+          next(err);
+          return;
+        }
+        res.redirect('/');
+      });
     }
   );
 });
