@@ -1,6 +1,6 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const User = require('../models/user-model.js');
+const express   = require('express');
+const bcrypt    = require('bcrypt');
+const User      = require('../models/user-model.js');
 
 const authRoutes = express.Router();
 
@@ -11,7 +11,7 @@ authRoutes.get('/signup', (req, res, next) => {
 
 authRoutes.post('/signup', (req, res, next) => {
   const signName     = req.body.signupName;
-  const signUsername = req.body.singupUsername;
+  const signUsername = req.body.signupUsername;
   const signPassword = req.body.signupPassword;
 
 //Don't let users submit blank usernames or passwords
@@ -23,7 +23,7 @@ authRoutes.post('/signup', (req, res, next) => {
   }
 
 //IF YOU WANT TO CHECK PASSWORD LENGTH, CHARACTERS, ETC YOU WOULD DO IT HERE
-  User.findone(
+  User.findOne(
     //first argument is the criteria which documents you want
     { username: signUsername },
     //second argument is the projection, which field you want to see

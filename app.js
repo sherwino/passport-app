@@ -6,6 +6,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
 const layouts      = require('express-ejs-layouts');
 const mongoose     = require('mongoose');
+const session      = require('express-session');
+const passport     = require('passport');
+const User         = require('./models/user-model.js'); //
+
 
 
 mongoose.connect('mongodb://localhost/passport-app');
@@ -18,7 +22,7 @@ app.set('view engine', 'ejs');
 
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
-
+//
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -27,6 +31,37 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(layouts);
+app.use(session({
+  secret: 'my cool passport app',
+  //these two options are going to be used not to prevent warnings
+  resave: true,
+  saveUninitialized: true
+}) );
+
+//these need to come after the session middleware----as seen above ^^^^
+app.use(passport.initialize());
+app.use(passport.session());
+
+//determines what to save in the session (called when you login)
+passport.serializeUser((user, cb) => {
+//cb is short for callback
+  cb(null, user._id);
+});
+
+
+//where to get the rest of the users' information (called on every request after)
+passport.deserializeUser((userId, cb) => {
+//query the database with the ID from the box
+  User.findById(userId, (err, theUser) =>{
+    if (err) {
+      cb(err);
+      return;
+    }
+//sending the users info to the passport
+    cb(null, theUser);
+  });
+
+});
 
 ///----------------------------ROUTES HERE ---------------------------
 
