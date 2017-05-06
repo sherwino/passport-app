@@ -1,13 +1,25 @@
 const express   = require('express');
 const bcrypt    = require('bcrypt');
+const passport  = require('passport');
 const User      = require('../models/user-model.js');
+const ensure    = require('connect-ensure-login');
 
 const authRoutes = express.Router();
 
 // ROUTES GO HERE
-authRoutes.get('/signup', (req, res, next) => {
+authRoutes.get('/signup',
+  //redirects to root if you Are Logged In
+  ensure.ensureNotLoggedIn('/'),
+
+  (req, res, next) => {
+
+  // if (req.user) {
+  //   res.redirect('/');
+  //   return;
+  // }
   res.render('auth/signup-view.ejs');
 });
+
 
 authRoutes.post('/signup', (req, res, next) => {
   const signName     = req.body.signupName;
@@ -67,10 +79,27 @@ authRoutes.post('/signup', (req, res, next) => {
   );
 });
 
+authRoutes.get('/login', (req, res, next) => {
+  res.render('auth/login-view.ejs');
 
+});
 
+//<form method="post" actopm="/login">
+authRoutes.post('/login',
 
+//redirects to root if you Are Logged In
+ensure.ensureNotLoggedIn('/'),
 
+  passport.authenticate('local', { //using local as in 'LocalStrategy', { options }
+  successRedirect: '/',      //instead of using regular express redirects we are using passport
+  failureRedirect: '/login'
+} )
+);
 
+authRoutes.get('/logout', (req, res, next) => {
+  req.logout(); //this a passport method
+
+  res.redirect('/');
+});
 
 module.exports = authRoutes;

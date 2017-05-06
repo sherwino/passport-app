@@ -21,7 +21,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
+app.locals.title = 'Playing with Passwords w/ passport-app';
 //
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -41,6 +41,15 @@ app.use(session({
 //these need to come after the session middleware----as seen above ^^^^
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+
+app.use((req, res, next) => {
+  if (req.user) {
+    res.locals.user = req.user;
+  }
+  next();
+});
 
 //PASSPORT GOES THROUGH THE FOLLOWING:
 // -- 1. Our Form
@@ -123,6 +132,11 @@ app.use('/', index);
 
 const myAuthRoutes = require('./routes/auth-routes.js');
 app.use('/', myAuthRoutes);
+
+const myUserRoutes = require('./routes/user-routes.js');
+app.use('/', myUserRoutes);
+
+
 
 ///-------------------------ROUTES ABOVE ------------------------------
 

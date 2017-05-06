@@ -1,0 +1,24 @@
+<h2> EDIT YOUR PROFILE </h2>
+
+<form method ="post" action="/not-important-now">
+  <label for="name-input"> Your Name:</labl>
+    <input id="name-input" type="text"
+    name="profileName" vallue=" <%= user.name %>">
+    <br>
+
+    <label for="username-input">Username:</label>
+    <input id="username-input" type="text"
+    name="profileUsername" value="<%= user.username %>">
+    <br>
+
+    <label for="current-password-input">Current Password</labl>
+      <input id="current-password-input" type="password"
+      name="profileCurrentPassword">
+      <br>
+
+      <label for="new-password-input">New Password: </labl>
+        <input id="new-password-input" type="password"
+        name="profileNewPassword">
+
+        <button>Save </button>
+      </form>

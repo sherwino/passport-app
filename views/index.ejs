@@ -1,2 +1,9 @@
 <h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+<% if (typeof user !== 'undefined') { %>
+  <h1> Hello, <%= user.name %>. </h1>
+<% } %>
+
+
+<p>Welcome to the homepage <%= title %></p>
+
+<img src="https://31.media.tumblr.com/59b6920c43218d07d0804cd40e44bc5f/tumblr_inline_n7opq8jxHx1supr0s.gif">
