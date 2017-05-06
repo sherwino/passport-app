@@ -63,6 +63,40 @@ passport.deserializeUser((userId, cb) => {
 
 });
 
+
+const LocalStrategy = require('passport-local').Strategy;
+
+const bcrypt = require('bcrypt');
+
+passpost.use( new LocalStrategy (
+  // 1st arg are just the options to customize the LocalStrategy
+  { },
+  //2nd argument is a callback for the lofic that validates the login
+  (loginUsername, loginPassword, next) => {
+    User.findOne(
+      { username: loginUsername },
+      (err, theUser ) => {
+        // tell passport if there was an error
+        if (err) {
+          next(err);
+          return;
+        }
+        // telling passport if there is no user with the given username
+        if (!theUser) {
+          //   the err argument in this case blank, and in the second arg fale means Log In Failed.
+          //   we could customize the feedback messages
+          next(null, false); //this is specific to passport, not express
+          return;
+        }
+
+        //at this point the username is correct... so the next step is to check the password
+        //bcrypt receives two arguments, the variable you are checking for and the original encryptedPassword
+        bcrypt.compareSync(loginPassword, theUser.encryptedPassword );
+      }
+    );
+  }
+) );
+
 ///----------------------------ROUTES HERE ---------------------------
 
 
