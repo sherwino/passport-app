@@ -91,7 +91,14 @@ passpost.use( new LocalStrategy (
 
         //at this point the username is correct... so the next step is to check the password
         //bcrypt receives two arguments, the variable you are checking for and the original encryptedPassword
-        bcrypt.compareSync(loginPassword, theUser.encryptedPassword );
+        if(!bcrypt.compareSync(loginPassword, theUser.encryptedPassword )) {
+          // false in 2nd argument means log in Failed
+          next(null, false);
+          return;
+        }
+        //when we get to this point of the code....we have passed all of the validations
+        //then we give passport the user's details, because there hasn't been an error
+        next(null, theUser);
       }
     );
   }
