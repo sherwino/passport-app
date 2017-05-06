@@ -42,6 +42,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//PASSPORT GOES THROUGH THE FOLLOWING:
+// -- 1. Our Form
+// == 2. LocalStrategy callback
+// -- 3. if succesful --- passport.serializeUser()
+
 //determines what to save in the session (called when you login)
 passport.serializeUser((user, cb) => {
 //cb is short for callback
@@ -68,9 +73,15 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const bcrypt = require('bcrypt');
 
-passpost.use( new LocalStrategy (
+passport.use( new LocalStrategy (
   // 1st arg are just the options to customize the LocalStrategy
-  { },
+  //LocalStrategy assumes that you loginforms are going to be named <input name="username" <input name="password"
+  //if it doesn't match what the passport assumes you have to define the names of the inputs below
+  {
+    //the usernameField is a STD key from passport it has to always be named this way
+    usernameField: 'loginUsername',  //<----you could only customize the string
+    passwordField: 'loginPassword'
+   },
   //2nd argument is a callback for the lofic that validates the login
   (loginUsername, loginPassword, next) => {
     User.findOne(
@@ -83,7 +94,7 @@ passpost.use( new LocalStrategy (
         }
         // telling passport if there is no user with the given username
         if (!theUser) {
-          //   the err argument in this case blank, and in the second arg fale means Log In Failed.
+          //   the err argument in this case is blank, and in the second arg fale means Log In Failed.
           //   we could customize the feedback messages
           next(null, false); //this is specific to passport, not express
           return;
