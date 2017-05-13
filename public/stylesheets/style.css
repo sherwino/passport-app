@@ -73,7 +73,7 @@ form {
 	z-index: 2;
 }
 
-input {
+input, #room-desc-input {
 		display: block;
 		appearance: none;
 		outline: 0;
@@ -127,5 +127,5 @@ input {
 
 img {
   width: 100%;
-  
+
 }
