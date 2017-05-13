@@ -46,8 +46,8 @@ passport.deserializeUser((userId, cb) => {
 passport.use( new FbStrategy(
 {
   //don't commit this
-  clientID:       '',
-  clientSecret:   '',
+  clientID:       process.env.FB_APP_ID,
+  clientSecret:   process.env.FB_APP_SECRET,
   callbackURL:    '/auth/facebook/callback'
 },
 
@@ -94,9 +94,9 @@ passport.use( new FbStrategy(
 passport.use (new GoogleStrategy(
   {
     //don't commit this here
-    clientID:         '',
-    clientSecret:     '',
-    callback:         '/auth/google/callback'
+    clientID:         process.env.GOOG_APP_ID,
+    clientSecret:     process.env.GOOG_APP_SECRET,
+    callbackURL:         '/auth/google/callback'
   },
   (accessToken, refreshToken, profile, done) => {
 

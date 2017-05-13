@@ -34,3 +34,6 @@ public/uploads
 
 # Ignore Secrets
 config/secret.js
+
+#Ignore development environment variables
+.env

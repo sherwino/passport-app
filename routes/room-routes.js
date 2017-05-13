@@ -15,7 +15,7 @@ router.get('/rooms/new',
     res.render('rooms/new-room-view.ejs');
 
 });
-
+// you should use s3 for production
 const myUploader = multer ({ dest: path.join(__dirname, '../public/uploads') });
 
 router.post('/rooms',

@@ -11,9 +11,15 @@ const passport     = require('passport');
 const User         = require('./models/user-model.js'); //
 const flash        = require('connect-flash');
 
+//load our environment variables from the .end file in dev
+// this is for dev only but in prod it just doesn't do anything
+require('dotenv').config();
+
+//tell node to run the code contained in this file
+//this sets up passport and all our strategies
 require('./config/passport-config.js');
 
-mongoose.connect('mongodb://localhost/passport-app');
+mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 
