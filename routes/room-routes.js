@@ -1,6 +1,9 @@
 const express   = require('express');
 const ensure    = require('connect-ensure-login');
 const router    = express.Router();
+const multer    = require('multer');
+const path      = require('path');
+
 const Room      = require('../models/room-model.js');
 
 //no need to get the id in the url/form because you have that info in the session
@@ -13,13 +16,24 @@ router.get('/rooms/new',
 
 });
 
+const myUploader = multer ({ dest: path.join(__dirname, '../public/uploads') });
+
 router.post('/rooms',
   ensure.ensureLoggedIn('/login'),
+
+  //<input type="file name ="roomPhoto">
+                      //  |
+  myUploader.single('roomPhoto'),
+
   (req, res, next) => {
+
+    console.log('FILE UPLOAD ------');
+    console.log(req.file);
+
     const theRoom = new Room ({
       name:           req.body.roomName,
       desc:           req.body.roomDescription,
-      photoAddress:   req.body.photoAddress,
+      photoAddress:   `/uploads/${req.file.filename}`,
       owner:          req.user._id
 
     });

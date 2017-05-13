@@ -45,8 +45,9 @@ passport.deserializeUser((userId, cb) => {
 
 passport.use( new FbStrategy(
 {
-  clientID:       '1245871508869582',
-  clientSecret:   'f92575acc03787705ceae66193f095a7',
+  //don't commit this
+  clientID:       '',
+  clientSecret:   '',
   callbackURL:    '/auth/facebook/callback'
 },
 
@@ -92,9 +93,9 @@ passport.use( new FbStrategy(
 
 passport.use (new GoogleStrategy(
   {
-
-    clientID:         '357914593698-349mibd28tkd771qacecpo90g490csg2.apps.googleusercontent.com',
-    clientSecret:     'UrX3NiersmgjoDntUx_dNfz_',
+    //don't commit this here
+    clientID:         '',
+    clientSecret:     '',
     callback:         '/auth/google/callback'
   },
   (accessToken, refreshToken, profile, done) => {
