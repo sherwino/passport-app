@@ -9,8 +9,9 @@ const mongoose     = require('mongoose');
 const session      = require('express-session');
 const passport     = require('passport');
 const User         = require('./models/user-model.js'); //
+const flash        = require('connect-flash');
 
-
+require('./config/passport-config.js');
 
 mongoose.connect('mongodb://localhost/passport-app');
 
@@ -32,97 +33,29 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(layouts);
 app.use(session({
-  secret: 'my cool passport app',
+  secret: 'dude app for passport',
   //these two options are going to be used not to prevent warnings
   resave: true,
   saveUninitialized: true
 }) );
 
 //these need to come after the session middleware----as seen above ^^^^
+
+app.use(flash()); //need to use this after the session was created
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 app.use((req, res, next) => {
   if (req.user) {
+    //creates a variable "user" FOR ALL THE VIEWS... yaaay
     res.locals.user = req.user;
   }
   next();
 });
 
-//PASSPORT GOES THROUGH THE FOLLOWING:
-// -- 1. Our Form
-// == 2. LocalStrategy callback
-// -- 3. if succesful --- passport.serializeUser()
-
-//determines what to save in the session (called when you login)
-passport.serializeUser((user, cb) => {
-//cb is short for callback
-  cb(null, user._id);
-});
 
 
-//where to get the rest of the users' information (called on every request after)
-passport.deserializeUser((userId, cb) => {
-//query the database with the ID from the box
-  User.findById(userId, (err, theUser) =>{
-    if (err) {
-      cb(err);
-      return;
-    }
-//sending the users info to the passport
-    cb(null, theUser);
-  });
-
-});
-
-
-const LocalStrategy = require('passport-local').Strategy;
-
-const bcrypt = require('bcrypt');
-
-passport.use( new LocalStrategy (
-  // 1st arg are just the options to customize the LocalStrategy
-  //LocalStrategy assumes that you loginforms are going to be named <input name="username" <input name="password"
-  //if it doesn't match what the passport assumes you have to define the names of the inputs below
-  {
-    //the usernameField is a STD key from passport it has to always be named this way
-    usernameField: 'loginUsername',  //<----you could only customize the string
-    passwordField: 'loginPassword'
-   },
-  //2nd argument is a callback for the lofic that validates the login
-  (loginUsername, loginPassword, next) => {
-    User.findOne(
-      { username: loginUsername },
-      (err, theUser ) => {
-        // tell passport if there was an error
-        if (err) {
-          next(err);
-          return;
-        }
-        // telling passport if there is no user with the given username
-        if (!theUser) {
-          //   the err argument in this case is blank, and in the second arg fale means Log In Failed.
-          //   we could customize the feedback messages
-          next(null, false); //this is specific to passport, not express
-          return;
-        }
-
-        //at this point the username is correct... so the next step is to check the password
-        //bcrypt receives two arguments, the variable you are checking for and the original encryptedPassword
-        if(!bcrypt.compareSync(loginPassword, theUser.encryptedPassword )) {
-          // false in 2nd argument means log in Failed
-          next(null, false);
-          return;
-        }
-        //when we get to this point of the code....we have passed all of the validations
-        //then we give passport the user's details, because there hasn't been an error
-        next(null, theUser);
-      }
-    );
-  }
-) );
 
 ///----------------------------ROUTES HERE ---------------------------
 
@@ -136,7 +69,8 @@ app.use('/', myAuthRoutes);
 const myUserRoutes = require('./routes/user-routes.js');
 app.use('/', myUserRoutes);
 
-
+const myRoomRoutes = require('./routes/room-routes.js');
+app.use('/', myRoomRoutes);
 
 ///-------------------------ROUTES ABOVE ------------------------------
 

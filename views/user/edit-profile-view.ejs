@@ -1,6 +1,15 @@
 <h2> EDIT YOUR PROFILE </h2>
 
-<form method ="post" action="/not-important-now">
+<% if (typeof successMessage !== 'undefined' && successMessage.length > 0) { %>
+  <div class="success" <%=successMessage %></div>
+<% } %>
+
+<% if (typeof errorMessage !== 'undefined') { %>
+<div class="error"> <%= errorMessage %> </div>
+
+<% } %>
+
+<form method ="post" action="/profile/edit">
   <label for="name-input"> Your Name:</labl>
     <input id="name-input" type="text"
     name="profileName" vallue=" <%= user.name %>">

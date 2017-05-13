@@ -14,7 +14,10 @@ router.get('/', (req, res, next) => {
   console.log('USER (from passport middleware)');
   console.log(req.user);
 
-  res.render('index');
+
+  res.render('index', {
+    successMessage:   req.flash('success')
+  });
 });
 
 module.exports = router;

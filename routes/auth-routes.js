@@ -73,6 +73,17 @@ authRoutes.post('/signup', (req, res, next) => {
           next(err);
           return;
         }
+
+        //before the redirect you could flash a message to the user using the flash package
+
+        //store a message in the session/box to display after the redirect
+        req.flash(
+          //1 arg is a key of the message
+          'success',
+          //2nd argument is the actual message you want to display to the user
+          'You have registered succesfully!'
+        );
+
         res.redirect('/');
       });
     }
@@ -80,7 +91,9 @@ authRoutes.post('/signup', (req, res, next) => {
 });
 
 authRoutes.get('/login', (req, res, next) => {
-  res.render('auth/login-view.ejs');
+  res.render('auth/login-view.ejs', {
+    errorMessage:   req.flash('error')
+  });
 
 });
 
@@ -91,15 +104,47 @@ authRoutes.post('/login',
 ensure.ensureNotLoggedIn('/'),
 
   passport.authenticate('local', { //using local as in 'LocalStrategy', { options }
-  successRedirect: '/',      //instead of using regular express redirects we are using passport
-  failureRedirect: '/login'
+  successRedirect:    '/',      //instead of using regular express redirects we are using passport
+  successFlash:       true,
+  failureRedirect:    '/login',
+  failureFlash:       true
 } )
 );
 
 authRoutes.get('/logout', (req, res, next) => {
   req.logout(); //this a passport method
-
+  req.flash('success', 'You have logged out successfully');
   res.redirect('/');
 });
+
+//-----------------FACEBOOK LOGIN ROUTES
+// it is getting 'facebook' from.... FBStrategy
+//the url could be called whatever you want
+ authRoutes.get('/auth/facebook', passport.authenticate('facebook'));
+
+//link to this address to log in with facebook
+//where facebook goes after the user has accepted/rejected terms
+// callbackURL: '/auth/facebook/callback'
+
+ authRoutes.get('/auth/facebook/callback', passport.authenticate('facebook', {
+   successRedirect:     '/',
+   failureRedirect:     '/login'
+   //here you could add the flash messagge
+ }));
+
+ authRoutes.get('/auth/google', passport.authenticate('google', {
+   scope: [
+     "https://www.googleapis.com/auth/plus.login",
+     "https://www.googleapis.com/auth/plus.profile.emails.read"
+  ]
+
+ }));
+
+
+ authRoutes.get('/auth/google/callback', passport.authenticate('google', {
+   successRedirect:     '/',
+   failureRedirect:     '/login'
+   //here you could add the flash messagge
+ }));
 
 module.exports = authRoutes;

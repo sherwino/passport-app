@@ -2,6 +2,10 @@
 
 <h3> Damn you...</h3>
 
+<% if (errorMessage.length > 0 ) { %>
+  <div class="error"> <%= errorMessage %> </div>
+<% } %>
+
 <form method="post" action="/login">
   <label for ="username-input">Username: </label>
   <input id="username-input" type="text" name="loginUsername">
@@ -16,3 +20,7 @@
 <p> Dude if you don't have an account....
   <a href="/signup">SIGN UP</a>
 </p>
+<br>
+<p><a href="/auth/facebook">Log In with Facebook </a></p>
+<br>
+<p><a href="/auth/google">Log In with Google </a></p>

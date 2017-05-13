@@ -43,6 +43,12 @@ nav a.active {
   cursor: default;
 }
 
+.success {
+  background-color: turquoise;
+  color: black;
+  border-radius: 10px;
+  padding: 5px;
+}
 
 .error {
   background-color: red;
@@ -116,4 +122,10 @@ input {
 			background-color: rgb(245, 247, 249);
 		}
 	}
+}
+
+
+img {
+  width: 100%;
+  
 }

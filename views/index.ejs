@@ -1,4 +1,10 @@
 <h1><%= title %></h1>
+
+<% if (successMessage.length > 0 ) { %>
+  <div class="success"><%= successMessage %> </div>
+
+<% } %>
+
 <% if (typeof user !== 'undefined') { %>
   <h1> Hello, <%= user.name %>. </h1>
 <% } %>
